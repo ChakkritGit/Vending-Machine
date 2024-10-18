@@ -73,9 +73,6 @@ class _AddInventoryFormState extends State<AddInventoryForm> {
         TextEditingController(text: widget.inventory?.inventoryMin.toString());
     inventoryMAX =
         TextEditingController(text: widget.inventory?.inventoryMAX.toString());
-
-    if (widget.inventory != null) {}
-
     super.initState();
   }
 

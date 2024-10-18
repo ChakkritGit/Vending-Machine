@@ -542,6 +542,25 @@ class DatabaseHelper {
     }
   }
 
+  Future<bool> updateStock(
+      BuildContext context, Map<String, dynamic> row, String? invId) async {
+    Database db = await instance.database;
+
+    try {
+      await db.update('inventory', row, where: 'id = ?', whereArgs: [invId]);
+      await getInventory(context);
+      await getGroup(context);
+      await getInventoryWithDrug(context);
+      ScaffoldMessage.show(context, 'เพิ่มสต๊อกสำเร็จ', true);
+      return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
   // ดึงข้อมูล
   Future<bool> getUsers(BuildContext context) async {
     Database db = await instance.database;

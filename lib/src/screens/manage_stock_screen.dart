@@ -4,6 +4,7 @@ import 'package:vending/src/blocs/inventory/inventory_bloc.dart';
 import 'package:vending/src/constants/colors.dart';
 import 'package:vending/src/constants/style.dart';
 import 'package:vending/src/models/stocks/stocks.dart';
+import 'package:vending/src/screens/add_stock.dart';
 import 'package:vending/src/widgets/manage_user_widget/image_file.dart';
 import 'package:vending/src/widgets/md_widget/app_bar.dart';
 import 'package:vending/src/widgets/utils/no_data.dart';
@@ -41,7 +42,8 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
       filteredStock = stockList.where((inv) {
         final inventoryPosition = inv.position.toString();
         final drugName = inv.drug?.drugName.toString().toLowerCase();
-        return inventoryPosition.contains(query) || drugName!.contains(query.toLowerCase());
+        return inventoryPosition.contains(query) ||
+            drugName!.contains(query.toLowerCase());
       }).toList();
     });
   }
@@ -82,16 +84,16 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                             children: [
                               ListTile(
                                 onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => AddInventory(
-                                  //       titleText:
-                                  //           'แก้ไขช่องที่ ${inventory.inventoryPosition}',
-                                  //       inventory: inventory,
-                                  //     ),
-                                  //   ),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddStock(
+                                        titleText:
+                                            '${stock.drug?.drugName} ช่องที่ ${stock.position}',
+                                        stock: stock,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 splashColor:
                                     ColorsTheme.primary.withOpacity(0.3),
@@ -99,7 +101,9 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      stock.drug?.drugName != null ? stock.drug!.drugName : '- -',
+                                      stock.drug?.drugName != null
+                                          ? stock.drug!.drugName
+                                          : '- -',
                                       style: const TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.bold),
