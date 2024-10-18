@@ -1,19 +1,25 @@
 class DrugInventory {
   final String inventoryId;
-  final int inventoryPosition;
-  final int inventoryQty;
+  final int? inventoryPosition;
+  final int? inventoryQty;
+  final int? inventoryMin;
+  final int? inventoryMax;
 
   DrugInventory({
     required this.inventoryId,
-    required this.inventoryPosition,
-    required this.inventoryQty,
+    this.inventoryPosition,
+    this.inventoryQty,
+    this.inventoryMin,
+    this.inventoryMax,
   });
 
   factory DrugInventory.fromJson(Map<String, dynamic> json) {
     return DrugInventory(
       inventoryId: json['inventoryId'],
-      inventoryPosition: json['inventoryPosition'],
-      inventoryQty: json['inventoryQty'],
+      inventoryPosition: json['inventoryPosition'] ?? 0,
+      inventoryQty: json['inventoryQty'] ?? 0,
+      inventoryMin: json['inventoryMin'] ?? 0,
+      inventoryMax: json['inventoryMax'] ?? 0,
     );
   }
 
@@ -22,6 +28,8 @@ class DrugInventory {
       'inventoryId': inventoryId,
       'inventoryPosition': inventoryPosition,
       'inventoryQty': inventoryQty,
+      'inventoryMin': inventoryMin,
+      'inventoryMax': inventoryMax,
     };
   }
 }
@@ -45,7 +53,9 @@ class DrugGroup {
 
   factory DrugGroup.fromJson(Map<String, dynamic> json) {
     var inventoryListFromJson = json['inventoryList'] as List?;
-    List<DrugInventory> inventoryList = inventoryListFromJson?.map((i) => DrugInventory.fromJson(i)).toList() ?? [];
+    List<DrugInventory> inventoryList =
+        inventoryListFromJson?.map((i) => DrugInventory.fromJson(i)).toList() ??
+            [];
 
     return DrugGroup(
       groupId: json['groupId'] ?? '',

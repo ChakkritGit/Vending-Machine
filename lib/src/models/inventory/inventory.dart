@@ -9,7 +9,6 @@ class Inventories {
   final String comment;
   final String createdAt;
   final String updatedAt;
-
   final String machineName;
   final int machineStatus;
 

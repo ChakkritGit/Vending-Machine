@@ -36,16 +36,18 @@ class MedicineList extends StatelessWidget {
                     (state.drugInventoryList.length / 10).ceil(),
                     (rowIndex) {
                       int startIndex = rowIndex * 10;
-                      int endIndex = (startIndex + 10).clamp(0, state.drugInventoryList.length);
-
+                      int endIndex = (startIndex + 10)
+                          .clamp(0, state.drugInventoryList.length);
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children:
                             List.generate(endIndex - startIndex, (cardIndex) {
-                          if (startIndex + cardIndex < state.drugInventoryList.length) {
-                            var group = state.drugInventoryList[startIndex + cardIndex];
+                          if (startIndex + cardIndex <
+                              state.drugInventoryList.length) {
+                            var group =
+                                state.drugInventoryList[startIndex + cardIndex];
                             int totalQty = group.inventoryList.fold(
-                                0, (sum, item) => sum + item.inventoryQty);
+                                0, (sum, item) => sum + item.inventoryQty!);
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 3.0, vertical: 3.0),

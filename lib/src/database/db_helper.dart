@@ -758,6 +758,8 @@ class DatabaseHelper {
               'inventoryId': item['inventoryId'],
               'inventoryPosition': item['inventoryPosition'],
               'inventoryQty': item['inventoryQty'],
+              'inventoryMin': item['inventoryMin'],
+              'inventoryMax': item['inventoryMax'],
             });
           } else {
             groups.add({
@@ -770,6 +772,8 @@ class DatabaseHelper {
                   'inventoryId': item['inventoryId'],
                   'inventoryPosition': item['inventoryPosition'],
                   'inventoryQty': item['inventoryQty'],
+                  'inventoryMin': item['inventoryMin'],
+                  'inventoryMax': item['inventoryMax'],
                 }
               ]
             });
