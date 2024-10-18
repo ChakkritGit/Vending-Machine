@@ -15,3 +15,12 @@ class InventoryList extends InventoryEvent {
   @override
   List<Object> get props => [inventoryList ?? []];
 }
+
+class StockList extends InventoryEvent {
+  final List<Stocks>? stockList;
+
+  const StockList({this.stockList});
+
+  @override
+  List<Object> get props => [stockList ?? []];
+}

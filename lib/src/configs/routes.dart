@@ -6,12 +6,14 @@ import 'package:vending/src/screens/database_screen.dart';
 import 'package:vending/src/screens/manage_main_inventory_screen.dart';
 import 'package:vending/src/screens/manage_machine_screen.dart';
 import 'package:vending/src/screens/manage_settings_screen.dart';
+import 'package:vending/src/screens/manage_stock_screen.dart';
 import 'package:vending/src/screens/screen_index.dart';
 
 class Routes {
   static const home = '/home';
   static const login = '/login';
   static const manage = '/manage';
+  static const manageStock = '/manageStock';
   static const user = '/user';
   static const drug = '/drug';
   static const machine = '/machine';
@@ -31,6 +33,7 @@ class Routes {
     home: (context) => const HomeScreen(),
     login: (context) => const LoginScreen(),
     manage: (context) => const ManageScreen(),
+    manageStock: (context) => const ManageStockScreen(),
     user: (context) => const ManageUserScreen(),
     drug: (context) => const ManageDrugScreen(),
     machine: (context) => const ManageMachineScreen(),
@@ -41,7 +44,6 @@ class Routes {
     addinventory: (context) => const AddInventory(),
     addgroup: (context) => const AddGroup(),
     settings: (context) => const ManageSettingsScreen(),
-
     database: (context) => const DatabaseScreen(),
   };
 }

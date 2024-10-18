@@ -20,6 +20,7 @@ class _AppState extends State<App> {
     await DatabaseHelper.instance.getInventory(context);
     await DatabaseHelper.instance.getMachine(context);
     await DatabaseHelper.instance.getGroup(context);
+    await DatabaseHelper.instance.getInventoryWithDrug(context);
   }
 
   @override

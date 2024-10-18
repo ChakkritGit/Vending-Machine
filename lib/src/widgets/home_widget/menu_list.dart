@@ -19,9 +19,10 @@ class MenuList extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (kDebugMode) {
-                      print('เติมยา');
-                    }
+                    Navigator.pushNamed(
+                      context,
+                      custom_route.Routes.manageStock,
+                    );
                   },
                   child: Container(
                     color: Colors.transparent,

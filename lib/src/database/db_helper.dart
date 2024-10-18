@@ -22,6 +22,7 @@ import 'package:vending/src/models/drugs/drug_list_model.dart';
 import 'package:vending/src/models/drugs/drug_model.dart';
 import 'package:vending/src/models/inventory/inventory.dart';
 import 'package:vending/src/models/machine/machine_model.dart';
+import 'package:vending/src/models/stocks/stocks.dart';
 import 'package:vending/src/models/users/user_model.dart';
 import 'package:vending/src/widgets/utils/scaffold_message.dart';
 import 'package:uuid/uuid.dart';
@@ -350,6 +351,7 @@ class DatabaseHelper {
           }
 
           await getGroup(context, txn: txn);
+          await getInventoryWithDrug(context, txn: txn);
 
           ScaffoldMessage.show(
               context, 'กรุ๊ปและข้อมูลสต๊อกถูกเพิ่มสำเร็จ', true);
@@ -519,6 +521,7 @@ class DatabaseHelper {
           }
 
           await getGroup(context, txn: txn);
+          await getInventoryWithDrug(context, txn: txn);
 
           ScaffoldMessage.show(
               context, 'กรุ๊ปและข้อมูลสินค้าคงคลังถูกอัปเดตสำเร็จ', true);
@@ -773,6 +776,74 @@ class DatabaseHelper {
     }
   }
 
+  Future<bool> getInventoryWithDrug(BuildContext context,
+      {Transaction? txn}) async {
+    Database db = await instance.database;
+    try {
+      final result = await (txn != null ? txn.rawQuery('''
+      SELECT
+    inventory.id AS inventoryId,
+    inventory.inventoryPosition,
+    inventory.inventoryQty,
+    inventory.inventoryMin,
+    inventory.inventoryMAX,
+    inventory.inventoryStatus,
+    drugs.id AS drugId,
+    drugs.drugName,
+    drugs.drugUnit,
+    drugs.drugImage,
+    drugs.drugPriority
+FROM
+    inventory
+INNER JOIN
+    group_inventory ON inventory.id = group_inventory.inventoryId
+INNER JOIN
+    `group` ON group_inventory.groupId = `group`.id
+INNER JOIN
+    drugs ON `group`.drugId = drugs.id
+ORDER BY
+    inventory.inventoryPosition;
+    ''') : db.rawQuery('''
+      SELECT
+    inventory.id AS inventoryId,
+    inventory.inventoryPosition,
+    inventory.inventoryQty,
+    inventory.inventoryMin,
+    inventory.inventoryMAX,
+    inventory.inventoryStatus,
+    drugs.id AS drugId,
+    drugs.drugName,
+    drugs.drugUnit,
+    drugs.drugImage,
+    drugs.drugPriority
+FROM
+    inventory
+INNER JOIN
+    group_inventory ON inventory.id = group_inventory.inventoryId
+INNER JOIN
+    `group` ON group_inventory.groupId = `group`.id
+INNER JOIN
+    drugs ON `group`.drugId = drugs.id
+ORDER BY
+    inventory.inventoryPosition;
+    '''));
+
+      if (result.isNotEmpty) {
+        List<Stocks> userList =
+            result.map((map) => Stocks.fromMap(map)).toList();
+        context.read<InventoryBloc>().add(StockList(stockList: userList));
+      } else {
+        context.read<InventoryBloc>().add(const StockList(stockList: []));
+      }
+      return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
   // ดึงตำแหน่ง
   Future<List<int>> getExistingPositions() async {
     Database db = await instance.database;
@@ -979,6 +1050,7 @@ class DatabaseHelper {
 
           if (res1 >= 1 && res2 >= 1) {
             await getGroup(context, txn: txn);
+            await getInventoryWithDrug(context, txn: txn);
             return true;
           } else {
             ScaffoldMessage.show(context, 'ไม่สามารถลบกรุ๊ปได้', false);
