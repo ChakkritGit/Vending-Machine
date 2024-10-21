@@ -133,6 +133,22 @@ class DatabaseHelper {
       FOREIGN KEY(inventoryId) REFERENCES inventory(id)
     );
   ''');
+
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS orders (
+    id TEXT NOT NULL PRIMARY KEY,
+    userId TEXT NOT NULL,
+    drugId TEXT NOT NULL,
+    inventoryId TEXT NOT NULL,
+    orderQty INTEGER NOT NULL,
+    comment TEXT,
+    createdAt REAL NOT NULL,
+    updatedAt REAL NOT NULL,
+    FOREIGN KEY(userId) REFERENCES users(id),
+    FOREIGN KEY(drugId) REFERENCES drugs(id),
+    FOREIGN KEY(inventoryId) REFERENCES inventory(id)
+);
+''');
   }
 
   // การยืนยัน
@@ -859,6 +875,45 @@ ORDER BY
         context.read<InventoryBloc>().add(const StockList(stockList: []));
       }
       return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
+  Future<bool> getDrugsReport(BuildContext context) async {
+    Database db = await instance.database;
+    try {
+      final result = await db.rawQuery('''
+      SELECT
+        u.userName,
+        d.drugName,
+        i.inventoryPosition,
+        SUM(o.orderQty) AS totalQuantity,
+        o.createdAt
+      FROM
+        orders o
+      JOIN
+        users u ON o.userId = u.id
+      JOIN
+        drugs d ON o.drugId = d.id
+      JOIN
+        inventory i ON o.inventoryId = i.id
+      WHERE
+        o.createdAt >= datetime('now', '-30 days')
+      GROUP BY
+        u.userName, d.drugName, i.inventoryPosition, o.createdAt;
+    ''');
+
+      if (result.isNotEmpty) {
+        ScaffoldMessage.show(context, 'กำลังสร้างรายงาน', true);
+        return true;
+      } else {
+        ScaffoldMessage.show(context, 'ไม่พบรายงาน', false);
+        return false;
+      }
     } catch (error) {
       if (kDebugMode) {
         print(error);
