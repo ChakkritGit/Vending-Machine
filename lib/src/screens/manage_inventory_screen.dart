@@ -186,7 +186,10 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                                     children: [
                                       CustomGap.smallHeightGap,
                                       Container(
-                                        padding: const EdgeInsets.all(4.0),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0,
+                                          horizontal: 8.0,
+                                        ),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(8.0),
@@ -264,7 +267,7 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                                   thickness: 1.0,
                                   color: Colors.grey[300],
                                   height: 7.0,
-                                  indent: 50.0,
+                                  indent: 100.0,
                                 ),
                               ],
                             ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vending/src/blocs/machine/machine_bloc.dart';
 import 'package:vending/src/constants/colors.dart';
+import 'package:vending/src/constants/style.dart';
 import 'package:vending/src/database/db_helper.dart';
 import 'package:vending/src/models/machine/machine_model.dart';
 import 'package:vending/src/screens/add_machine.dart';
@@ -178,23 +179,71 @@ class _ManageMachineScreenState extends State<ManageMachineScreen> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    subtitle: machine.machineStatus == 0
-                                        ? const Text(
-                                            'ใช้งานอยู่',
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          )
-                                        : const Text(
-                                            'ปิดการใช้งาน',
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                    leading: const Icon(
-                                      Icons.build_circle_sharp,
-                                      size: 48.0,
-                                      color: ColorsTheme.grey,
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomGap.smallHeightGap,
+                                        machine.machineStatus == 0
+                                            ? Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4.0,
+                                                  horizontal: 8.0,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  border: Border.all(
+                                                    color: ColorsTheme.primary,
+                                                    width: 2.0,
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'ใช้งานอยู่',
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    color: ColorsTheme.primary,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4.0,
+                                                  horizontal: 8.0,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  border: Border.all(
+                                                    color: ColorsTheme.error,
+                                                    width: 2.0,
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'ปิดการใช้งาน',
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    color: ColorsTheme.error,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              )
+                                      ],
+                                    ),
+                                    leading: const SizedBox(
+                                      width: 70.0,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.build_circle_sharp,
+                                          size: 52.0,
+                                          color: ColorsTheme.grey,
+                                        ),
+                                      ),
                                     ),
                                     trailing: const Icon(
                                       Icons.navigate_next,
@@ -205,7 +254,7 @@ class _ManageMachineScreenState extends State<ManageMachineScreen> {
                                     thickness: 1.0,
                                     color: Colors.grey[300],
                                     height: 7.0,
-                                    indent: 130.0,
+                                    indent: 100.0,
                                   ),
                                 ],
                               ),

@@ -217,7 +217,12 @@ class _ManageDrugScreenState extends State<ManageDrugScreen> {
                                       // CustomGap.smallHeightGap,
                                     ],
                                   ),
-                                  leading: ImageFile(file: drug.drugImage),
+                                  leading: SizedBox(
+                                    width: 100.0,
+                                    child: Center(
+                                      child: ImageFile(file: drug.drugImage),
+                                    ),
+                                  ),
                                   trailing: const Icon(
                                     Icons.navigate_next,
                                     size: 36.0,

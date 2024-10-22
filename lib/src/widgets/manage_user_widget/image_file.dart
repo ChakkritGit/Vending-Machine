@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:vending/src/constants/colors.dart';
 
 class ImageFile extends StatelessWidget {
   final String? file;
@@ -16,6 +17,11 @@ class ImageFile extends StatelessWidget {
         width: 100.0,
         height: 100.0,
         fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => const Icon(
+          Icons.image,
+          size: 52.0,
+          color: ColorsTheme.grey,
+        ),
       ),
     );
   }

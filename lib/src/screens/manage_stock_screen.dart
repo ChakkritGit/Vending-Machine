@@ -118,7 +118,10 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                                     CustomGap.smallHeightGap,
                                     // แสดงจำนวนคงเหลือพร้อมสีเตือน
                                     Container(
-                                      padding: const EdgeInsets.all(4.0),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 4.0,
+                                        horizontal: 8.0,
+                                      ),
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
@@ -175,50 +178,51 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                                     ),
                                   ],
                                 ),
-                                leading: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16.0),
-                                      child: stock.drug?.drugImage != null
-                                          ? ImageFile(
-                                              file: stock.drug?.drugImage)
-                                          : Image.asset(
-                                              'lib/src/assets/images/user_placeholder.png',
-                                              width: 300.0,
-                                              height: 300.0,
-                                              fit: BoxFit.contain,
+                                leading: SizedBox(
+                                    width: 100.0,
+                                    child: Center(
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(16.0),
+                                            child: ImageFile(
+                                                file: stock.drug?.drugImage),
+                                          ),
+                                          Positioned(
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(
+                                                    0.5), // Semi-transparent background
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  bottomLeft: Radius.circular(
+                                                      8.0), // Match border radius
+                                                  bottomRight: Radius.circular(
+                                                      8.0), // Match border radius
+                                                ),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.all(1.0),
+                                              child: Text(
+                                                stock.position
+                                                    .toString(), // "Pick Image" in Thai
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      left: 0,
-                                      right: 0,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(
-                                              0.5), // Semi-transparent background
-                                          borderRadius: const BorderRadius.only(
-                                            bottomLeft: Radius.circular(
-                                                8.0), // Match border radius
-                                            bottomRight: Radius.circular(
-                                                8.0), // Match border radius
                                           ),
-                                        ),
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: Text(
-                                          stock.position
-                                              .toString(), // "Pick Image" in Thai
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    )),
                                 trailing: const Icon(
                                   Icons.navigate_next,
                                   size: 36.0,
@@ -228,7 +232,7 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                                 thickness: 1.0,
                                 color: Colors.grey[300],
                                 height: 7.0,
-                                indent: 50.0,
+                                indent: 125.0,
                               ),
                             ],
                           ),

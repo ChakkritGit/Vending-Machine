@@ -200,9 +200,12 @@ class _ManageUserScreenState extends State<ManageUserScreen> {
                                       fontSize: 18.0,
                                     ),
                                   ),
-                                  leading: user.userImage != null
-                                      ? ImageFile(file: user.userImage!)
-                                      : null,
+                                  leading: SizedBox(
+                                    width: 100.0,
+                                    child: Center(
+                                      child: ImageFile(file: user.userImage!),
+                                    ),
+                                  ),
                                   trailing: const Icon(
                                     Icons.navigate_next,
                                     size: 36.0,

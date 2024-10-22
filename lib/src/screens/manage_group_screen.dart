@@ -217,7 +217,10 @@ class _ManageGroupScreenState extends State<ManageGroupScreen> {
                                               margin: const EdgeInsets.only(
                                                   top: 10.0),
                                               padding:
-                                                  const EdgeInsets.all(4.0),
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 4.0,
+                                                horizontal: 8.0,
+                                              ),
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
@@ -231,6 +234,7 @@ class _ManageGroupScreenState extends State<ManageGroupScreen> {
                                                 style: const TextStyle(
                                                   fontSize: 18.0,
                                                   color: ColorsTheme.primary,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                             ),
@@ -240,7 +244,12 @@ class _ManageGroupScreenState extends State<ManageGroupScreen> {
                                       },
                                     ),
                                   ),
-                                  leading: ImageFile(file: group.drugImage),
+                                  leading: SizedBox(
+                                    width: 100.0,
+                                    child: Center(
+                                      child: ImageFile(file: group.drugImage),
+                                    ),
+                                  ),
                                   trailing: const Icon(
                                     Icons.navigate_next,
                                     size: 36.0,

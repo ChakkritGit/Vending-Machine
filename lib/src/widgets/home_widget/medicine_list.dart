@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vending/src/blocs/drug/drug_bloc.dart';
+import 'package:vending/src/constants/colors.dart';
 import 'package:vending/src/widgets/utils/no_data.dart';
 
 class MedicineList extends StatelessWidget {
@@ -48,6 +49,11 @@ class MedicineList extends StatelessWidget {
                                 state.drugInventoryList[startIndex + cardIndex];
                             int totalQty = group.inventoryList.fold(
                                 0, (sum, item) => sum + item.inventoryQty!);
+
+                            bool isLowQty = totalQty <=
+                                int.parse(group.groupMin.toString());
+                            bool isOutOfStock = totalQty == 0;
+
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 3.0, vertical: 3.0),
@@ -67,6 +73,13 @@ class MedicineList extends StatelessWidget {
                                         width: 180.0,
                                         height: 130.0,
                                         fit: BoxFit.contain,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Icon(
+                                          Icons.image,
+                                          size: 130.0,
+                                          color: ColorsTheme.grey,
+                                        ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
@@ -77,7 +90,38 @@ class MedicineList extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      Text('คงเหลือ: $totalQty'),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0,
+                                          horizontal: 8.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                            color: isOutOfStock
+                                                ? Colors.red
+                                                : isLowQty
+                                                    ? Colors.orange
+                                                    : Colors
+                                                        .grey, // กรอบเปลี่ยนสี
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'คงเหลือ: $totalQty',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: isOutOfStock
+                                                ? Colors.red // แสดงสีแดงถ้าหมด
+                                                : isLowQty
+                                                    ? Colors
+                                                        .orange // แสดงสีส้มถ้าต่ำกว่า minQty
+                                                    : Colors.black,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),

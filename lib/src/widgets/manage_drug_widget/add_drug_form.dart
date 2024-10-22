@@ -31,7 +31,6 @@ class _AddDrugFormState extends State<AddDrugForm> {
 
   Future<void> pickImage() async {
     if (_imageFile != null && _imageFile!.existsSync()) {
-      // ลบภาพไฟล์ก่อนหน้า
       await _imageFile!.delete();
     }
 
@@ -89,13 +88,16 @@ class _AddDrugFormState extends State<AddDrugForm> {
     if (imagePath != null &&
         drugName.text.isNotEmpty &&
         drugUnit.text.isNotEmpty) {
-      var result = await DatabaseHelper.instance.updateDrug(context, {
-        'drugName': drugName.text,
-        'drugUnit': drugUnit.text,
-        'drugImage': imagePath,
-        'drugPriority': selectedPriority,
-        'updatedAt': DateTime.now().toIso8601String(),
-      }, widget.drug?.id);
+      var result = await DatabaseHelper.instance.updateDrug(
+          context,
+          {
+            'drugName': drugName.text,
+            'drugUnit': drugUnit.text,
+            'drugImage': imagePath,
+            'drugPriority': selectedPriority,
+            'updatedAt': DateTime.now().toIso8601String(),
+          },
+          widget.drug?.id);
       // ignore: use_build_context_synchronously
       if (result) Navigator.of(context).pop();
     } else {
@@ -247,6 +249,12 @@ class _AddDrugFormState extends State<AddDrugForm> {
                           width: 300.0,
                           height: 300.0,
                           fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.image,
+                            size: 300.0,
+                            color: ColorsTheme.grey,
+                          ),
                         )
                       : Image.asset(
                           'lib/src/assets/images/user_placeholder.png',
@@ -291,7 +299,9 @@ class _AddDrugFormState extends State<AddDrugForm> {
             height: CustomInputStyle.inputHeight,
             decoration: CustomInputStyle.buttonBoxdecoration,
             child: TextButton(
-              onPressed: () => widget.drug != null ? handleSubmitEdit(context) : handleSubmit(context),
+              onPressed: () => widget.drug != null
+                  ? handleSubmitEdit(context)
+                  : handleSubmit(context),
               child: const Text(
                 "บันทึก",
                 style: CustomInputStyle.textButtonStyle,
