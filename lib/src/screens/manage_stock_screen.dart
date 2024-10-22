@@ -78,6 +78,11 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                       itemCount: stockList.length,
                       itemBuilder: (context, index) {
                         final stock = stockList[index];
+
+                        // เช็คจำนวนคงเหลือต่ำกว่า minQty หรือ เท่ากับ 0
+                        bool isLowQty = stock.qty <= stock.minQty;
+                        bool isOutOfStock = stock.qty == 0;
+
                         return Material(
                           color: Colors.transparent,
                           child: Column(
@@ -100,19 +105,46 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // ช่องว่างระหว่างชื่อยาและจำนวนคงเหลือ
                                     Text(
                                       stock.drug?.drugName != null
                                           ? stock.drug!.drugName
                                           : '- -',
                                       style: const TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    Text(
-                                      'จำนวนคงเหลือ ${stock.qty.toString()}',
-                                      style: const TextStyle(
+                                    CustomGap.smallHeightGap,
+                                    // แสดงจำนวนคงเหลือพร้อมสีเตือน
+                                    Container(
+                                      padding: const EdgeInsets.all(4.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                          color: isOutOfStock
+                                              ? Colors.red
+                                              : isLowQty
+                                                  ? Colors.orange
+                                                  : Colors
+                                                      .grey, // กรอบเปลี่ยนสี
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'จำนวนคงเหลือ ${stock.qty.toString()}',
+                                        style: TextStyle(
                                           fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: isOutOfStock
+                                              ? Colors.red // แสดงสีแดงถ้าหมด
+                                              : isLowQty
+                                                  ? Colors
+                                                      .orange // แสดงสีส้มถ้าต่ำกว่า minQty
+                                                  : Colors.black,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -120,6 +152,8 @@ class _ManageStockScreenState extends State<ManageStockScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    // ช่องว่างระหว่างจำนวนคงเหลือและข้อมูล min/max
+                                    CustomGap.smallHeightGap,
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,

@@ -23,6 +23,8 @@ class AddGroupForm extends StatefulWidget {
 class _AddGroupFormState extends State<AddGroupForm> {
   String? selectedDrugId;
   List<String> selectedInventoryIds = [];
+  late TextEditingController groupMin;
+  late TextEditingController groupMax;
 
   List<Map<String, dynamic>> createInventoryList() {
     List<Map<String, dynamic>> inventories = [];
@@ -37,11 +39,17 @@ class _AddGroupFormState extends State<AddGroupForm> {
   }
 
   Future handleSubmit(BuildContext context) async {
-    if (selectedDrugId != null && selectedInventoryIds.isNotEmpty) {
+    if (selectedDrugId != null &&
+        selectedInventoryIds.isNotEmpty &&
+        groupMin.text.isNotEmpty &&
+        groupMax.text.isNotEmpty) {
       var resulst = await DatabaseHelper.instance.createGroupAndInventory(
-          context,
-          drugId: selectedDrugId,
-          inventories: createInventoryList());
+        context,
+        drugId: selectedDrugId,
+        inventories: createInventoryList(),
+        groupMin: groupMin.text,
+        groupMax: groupMax.text,
+      );
       if (resulst) Navigator.of(context).pop();
     } else {
       ScaffoldMessage.show(context, 'กรุณากรอกข้อมุลให้ครบ', false);
@@ -49,10 +57,18 @@ class _AddGroupFormState extends State<AddGroupForm> {
   }
 
   Future handleSubmitEdit(BuildContext context) async {
-    if (selectedDrugId != null && selectedInventoryIds.isNotEmpty) {
+    if (selectedDrugId != null &&
+        selectedInventoryIds.isNotEmpty &&
+        groupMin.text.isNotEmpty &&
+        groupMax.text.isNotEmpty) {
       var resulst = await DatabaseHelper.instance.updateGroupAndInventory(
-          context, widget.group?.groupId,
-          drugId: selectedDrugId, inventories: createInventoryList());
+        context,
+        widget.group?.groupId,
+        drugId: selectedDrugId,
+        inventories: createInventoryList(),
+        groupMin: groupMin.text,
+        groupMax: groupMax.text,
+      );
       if (resulst) Navigator.of(context).pop();
     } else {
       ScaffoldMessage.show(context, 'กรุณากรอกข้อมุลให้ครบ', false);
@@ -61,6 +77,8 @@ class _AddGroupFormState extends State<AddGroupForm> {
 
   @override
   void initState() {
+    groupMin = TextEditingController(text: widget.group?.groupMin.toString());
+    groupMax = TextEditingController(text: widget.group?.groupMax.toString());
     if (widget.group != null) {
       selectedDrugId = widget.group?.drugId;
       for (var drugPos in widget.group!.inventoryList) {
@@ -72,6 +90,8 @@ class _AddGroupFormState extends State<AddGroupForm> {
 
   @override
   void dispose() {
+    groupMin.dispose();
+    groupMax.dispose();
     super.dispose();
   }
 
@@ -151,7 +171,6 @@ class _AddGroupFormState extends State<AddGroupForm> {
                       'ช่องที่ ${inventory.inventoryPosition}',
                     );
                   }),
-
                 ...widget.inventory
                     .where((inventory) =>
                         !selectedInventoryIds.contains(inventory['id']))
@@ -181,15 +200,53 @@ class _AddGroupFormState extends State<AddGroupForm> {
               },
               cancelText: const Text(
                 'ยกเลิก',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
+                style: TextStyle(fontSize: 20.0, color: Colors.red),
               ),
               confirmText: const Text(
                 'ตกลง',
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
+              ),
+            ),
+          ),
+          CustomGap.smallHeightGap,
+          const Padding(
+            padding: CustomPadding.paddingAll_10,
+            child: CustomLabel(text: 'Min'),
+          ),
+          Container(
+            width: CustomInputStyle.inputWidth,
+            height: CustomInputStyle.inputHeight,
+            margin: CustomMargin.marginSymmetricVertical_1,
+            padding: CustomPadding.paddingSymmetricInput,
+            decoration: CustomInputStyle.inputBoxdecoration,
+            child: TextFormField(
+              controller: groupMin,
+              style: CustomInputStyle.inputStyle,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintStyle: CustomInputStyle.inputHintStyle,
+              ),
+            ),
+          ),
+          CustomGap.smallHeightGap,
+          const Padding(
+            padding: CustomPadding.paddingAll_10,
+            child: CustomLabel(text: 'Max'),
+          ),
+          Container(
+            width: CustomInputStyle.inputWidth,
+            height: CustomInputStyle.inputHeight,
+            margin: CustomMargin.marginSymmetricVertical_1,
+            padding: CustomPadding.paddingSymmetricInput,
+            decoration: CustomInputStyle.inputBoxdecoration,
+            child: TextFormField(
+              controller: groupMax,
+              style: CustomInputStyle.inputStyle,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintStyle: CustomInputStyle.inputHintStyle,
               ),
             ),
           ),

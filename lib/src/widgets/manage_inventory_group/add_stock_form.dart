@@ -15,10 +15,12 @@ class AddStockForm extends StatefulWidget {
 
 class _AddStockFormState extends State<AddStockForm> {
   late TextEditingController inventoryQty;
+  late int currentQty;
 
   @override
   void initState() {
-    inventoryQty = TextEditingController(text: widget.stock?.qty.toString());
+    currentQty = widget.stock?.qty ?? 0;
+    inventoryQty = TextEditingController(text: currentQty.toString());
     super.initState();
   }
 
@@ -26,6 +28,24 @@ class _AddStockFormState extends State<AddStockForm> {
   void dispose() {
     inventoryQty.dispose();
     super.dispose();
+  }
+
+  void increaseQty() {
+    if (currentQty < widget.stock!.maxQty) {
+      setState(() {
+        currentQty++;
+        inventoryQty.text = currentQty.toString();
+      });
+    }
+  }
+
+  void decreaseQty() {
+    if (currentQty > 0) {
+      setState(() {
+        currentQty--;
+        inventoryQty.text = currentQty.toString();
+      });
+    }
   }
 
   Future handleSubmit(BuildContext context) async {
@@ -61,20 +81,50 @@ class _AddStockFormState extends State<AddStockForm> {
             padding: CustomPadding.paddingAll_10,
             child: CustomLabel(text: 'จำนวน'),
           ),
-          Container(
-            height: CustomInputStyle.inputHeight,
-            margin: CustomMargin.marginSymmetricVertical_1,
-            padding: CustomPadding.paddingSymmetricInput,
-            decoration: CustomInputStyle.inputBoxdecoration,
-            child: TextFormField(
-              controller: inventoryQty,
-              keyboardType: TextInputType.number,
-              style: CustomInputStyle.inputStyle,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintStyle: CustomInputStyle.inputHintStyle,
+          CustomGap.mediumHeightGap,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey, width: 2),
+                ),
+                child: IconButton(
+                  iconSize: 48,
+                  icon: const Icon(Icons.remove),
+                  onPressed: currentQty > 0 ? decreaseQty : null,
+                ),
               ),
-            ),
+              CustomGap.mediumWidthGap,
+              SizedBox(
+                width: 100,
+                child: TextFormField(
+                  controller: inventoryQty,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 48, fontWeight: FontWeight.bold),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
+              CustomGap.mediumWidthGap,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey, width: 2),
+                ),
+                child: IconButton(
+                  iconSize: 48,
+                  icon: const Icon(Icons.add),
+                  onPressed:
+                      currentQty < widget.stock!.maxQty ? increaseQty : null,
+                ),
+              ),
+            ],
           ),
           CustomGap.mediumHeightGap,
           Container(
@@ -88,7 +138,7 @@ class _AddStockFormState extends State<AddStockForm> {
                 style: CustomInputStyle.textButtonStyle,
               ),
             ),
-          ),
+          )
         ],
       ),
     );

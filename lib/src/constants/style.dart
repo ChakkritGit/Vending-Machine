@@ -42,6 +42,8 @@ class CustomGap {
   static const smallWidthGap = SizedBox(width: 5.0);
   static const mediumWidthGap = SizedBox(width: 30.0);
   static const largeWidthGap = SizedBox(width: 50.0);
+
+  static const smallWidthGap_1 = SizedBox(width: 10.0);
 }
 
 class CustomRadius {

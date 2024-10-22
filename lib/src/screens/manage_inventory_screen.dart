@@ -137,6 +137,12 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                       itemCount: inventoryList.length,
                       itemBuilder: (context, index) {
                         final inventory = inventoryList[index];
+
+                        // เช็คจำนวนคงเหลือต่ำกว่า minQty หรือ เท่ากับ 0
+                        bool isLowQty =
+                            inventory.inventoryQty <= inventory.inventoryMin;
+                        bool isOutOfStock = inventory.inventoryQty == 0;
+
                         return Dismissible(
                           key: Key(inventory.id),
                           background: Container(
@@ -174,17 +180,48 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                                   },
                                   splashColor:
                                       ColorsTheme.primary.withOpacity(0.3),
-                                  title: Text(
-                                    'จำนวนคงเหลือ ${inventory.inventoryQty.toString()}',
-                                    style: const TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomGap.smallHeightGap,
+                                      Container(
+                                        padding: const EdgeInsets.all(4.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                            color: isOutOfStock
+                                                ? Colors.red
+                                                : isLowQty
+                                                    ? Colors.orange
+                                                    : Colors
+                                                        .grey, // กรอบเปลี่ยนสี
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'จำนวนคงเหลือ ${inventory.inventoryQty.toString()}',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: isOutOfStock
+                                                ? Colors.red // แสดงสีแดงถ้าหมด
+                                                : isLowQty
+                                                    ? Colors
+                                                        .orange // แสดงสีส้มถ้าต่ำกว่า minQty
+                                                    : Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
+                                      CustomGap.smallHeightGap,
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -206,13 +243,18 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                                       ),
                                     ],
                                   ),
-                                  leading: Text(
-                                    inventory.inventoryPosition.toString(),
-                                    style: const TextStyle(
-                                      fontSize: 48.0,
-                                      color: ColorsTheme.grey,
-                                    ),
-                                  ),
+                                  leading: SizedBox(
+                                      width: 70.0,
+                                      child: Center(
+                                        child: Text(
+                                          inventory.inventoryPosition
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 48.0,
+                                            color: ColorsTheme.grey,
+                                          ),
+                                        ),
+                                      )),
                                   trailing: const Icon(
                                     Icons.navigate_next,
                                     size: 36.0,

@@ -129,6 +129,8 @@ class DatabaseHelper {
       id TEXT NOT NULL PRIMARY KEY,
       groupId TEXT NOT NULL,
       inventoryId TEXT NOT NULL,
+      min INTEGER NOT NULL DEFAULT 0,
+      max INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY(groupId) REFERENCES `group`(id),
       FOREIGN KEY(inventoryId) REFERENCES inventory(id)
     );
@@ -136,17 +138,17 @@ class DatabaseHelper {
 
     await db.execute('''
     CREATE TABLE IF NOT EXISTS orders (
-    id TEXT NOT NULL PRIMARY KEY,
-    userId TEXT NOT NULL,
-    drugId TEXT NOT NULL,
-    inventoryId TEXT NOT NULL,
-    orderQty INTEGER NOT NULL,
-    comment TEXT,
-    createdAt REAL NOT NULL,
-    updatedAt REAL NOT NULL,
-    FOREIGN KEY(userId) REFERENCES users(id),
-    FOREIGN KEY(drugId) REFERENCES drugs(id),
-    FOREIGN KEY(inventoryId) REFERENCES inventory(id)
+      id TEXT NOT NULL PRIMARY KEY,
+      userId TEXT NOT NULL,
+      drugId TEXT NOT NULL,
+      inventoryId TEXT NOT NULL,
+      orderQty INTEGER NOT NULL,
+      comment TEXT,
+      createdAt REAL NOT NULL,
+      updatedAt REAL NOT NULL,
+      FOREIGN KEY(userId) REFERENCES users(id),
+      FOREIGN KEY(drugId) REFERENCES drugs(id),
+      FOREIGN KEY(inventoryId) REFERENCES inventory(id)
 );
 ''');
   }
@@ -337,6 +339,8 @@ class DatabaseHelper {
     BuildContext context, {
     required String? drugId,
     required List<Map<String, dynamic>> inventories,
+    required String? groupMin,
+    required String? groupMax,
   }) async {
     Database db = await instance.database;
 
@@ -363,6 +367,8 @@ class DatabaseHelper {
               'id': 'GROUPINV-${const Uuid().v4()}',
               'groupId': groupId,
               'inventoryId': inventoryId,
+              'min': int.parse(groupMin.toString()),
+              'max': int.parse(groupMax.toString()),
             });
           }
 
@@ -458,9 +464,14 @@ class DatabaseHelper {
     }
   }
 
-  Future<bool> updateGroupAndInventory(BuildContext context, String? gId,
-      {required String? drugId,
-      required List<Map<String, dynamic>> inventories}) async {
+  Future<bool> updateGroupAndInventory(
+    BuildContext context,
+    String? gId, {
+    required String? drugId,
+    required List<Map<String, dynamic>> inventories,
+    required String? groupMin,
+    required String? groupMax,
+  }) async {
     Database db = await instance.database;
 
     try {
@@ -531,6 +542,8 @@ class DatabaseHelper {
                   'id': 'GROUPINV-${const Uuid().v4()}',
                   'groupId': gId,
                   'inventoryId': inventoryId,
+                  'min': int.parse(groupMin.toString()),
+                  'max': int.parse(groupMax.toString()),
                 },
               );
             }
@@ -734,11 +747,12 @@ class DatabaseHelper {
         g.drugId,
         d.drugName,
         d.drugImage,
+        d.drugPriority,
         gi.inventoryId,
+        gi.min as groupMin,
+        gi.max as groupMax,
         i.inventoryPosition,
-        i.inventoryQty,
-        i.inventoryMin,
-        i.inventoryMax
+        i.inventoryQty
       FROM `group` g
       INNER JOIN group_inventory gi ON g.id = gi.groupId
       INNER JOIN inventory i ON gi.inventoryId = i.id
@@ -750,11 +764,12 @@ class DatabaseHelper {
         g.drugId,
         d.drugName,
         d.drugImage,
+        d.drugPriority,
         gi.inventoryId,
+        gi.min as groupMin,
+        gi.max as groupMax,
         i.inventoryPosition,
-        i.inventoryQty,
-        i.inventoryMin,
-        i.inventoryMax
+        i.inventoryQty
       FROM `group` g
       INNER JOIN group_inventory gi ON g.id = gi.groupId
       INNER JOIN inventory i ON gi.inventoryId = i.id
@@ -774,8 +789,6 @@ class DatabaseHelper {
               'inventoryId': item['inventoryId'],
               'inventoryPosition': item['inventoryPosition'],
               'inventoryQty': item['inventoryQty'],
-              'inventoryMin': item['inventoryMin'],
-              'inventoryMax': item['inventoryMax'],
             });
           } else {
             groups.add({
@@ -783,13 +796,14 @@ class DatabaseHelper {
               'drugId': item['drugId'],
               'drugName': item['drugName'],
               'drugImage': item['drugImage'],
+              'drugPriority': item['drugPriority'],
+              'groupMin': item['groupMin'],
+              'groupMax': item['groupMax'],
               'inventoryList': [
                 {
                   'inventoryId': item['inventoryId'],
                   'inventoryPosition': item['inventoryPosition'],
                   'inventoryQty': item['inventoryQty'],
-                  'inventoryMin': item['inventoryMin'],
-                  'inventoryMax': item['inventoryMax'],
                 }
               ]
             });

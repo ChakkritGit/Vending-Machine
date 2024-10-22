@@ -65,7 +65,7 @@ class _ManageGroupScreenState extends State<ManageGroupScreen> {
             ),
           ),
           content: Text(
-            'คุณต้องการลบ "$drugName" หรือไม่?',
+            'คุณต้องการลบกรุ๊ป "$drugName" หรือไม่?',
             style: const TextStyle(
               fontSize: 20.0,
             ),
@@ -162,24 +162,49 @@ class _ManageGroupScreenState extends State<ManageGroupScreen> {
                               children: [
                                 ListTile(
                                   onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => AddGroup(
-                                            titleText: 'แก้ไขกรุ๊ป ${group.drugName}',
-                                            group: group,
-                                          ),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddGroup(
+                                          titleText:
+                                              'แก้ไขกรุ๊ป ${group.drugName}',
+                                          group: group,
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    );
+                                  },
                                   splashColor:
                                       ColorsTheme.primary.withOpacity(0.3),
-                                  title: Text(
-                                    group.drugName,
-                                    style: const TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        group.drugName,
+                                        style: const TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 3.0),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Min ${group.groupMin.toString()}',
+                                            style: const TextStyle(
+                                              fontSize: 18.0,
+                                            ),
+                                          ),
+                                          CustomGap.smallWidthGap,
+                                          Text(
+                                            'Max ${group.groupMax.toString()}',
+                                            style: const TextStyle(
+                                              fontSize: 18.0,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
                                   subtitle: Row(
                                     children: List.generate(
@@ -188,13 +213,28 @@ class _ManageGroupScreenState extends State<ManageGroupScreen> {
                                         var groups = group.inventoryList[item];
                                         return Row(
                                           children: [
-                                            Text(
-                                              'ช่องที่ ${groups.inventoryPosition}',
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                border: Border.all(
+                                                  color: ColorsTheme.primary,
+                                                  width: 2.0,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'ช่องที่ ${groups.inventoryPosition}',
+                                                style: const TextStyle(
+                                                  fontSize: 18.0,
+                                                  color: ColorsTheme.primary,
+                                                ),
                                               ),
                                             ),
-                                            CustomGap.smallWidthGap
+                                            CustomGap.smallWidthGap_1
                                           ],
                                         );
                                       },

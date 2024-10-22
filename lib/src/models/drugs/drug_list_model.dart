@@ -2,15 +2,11 @@ class DrugInventory {
   final String inventoryId;
   final int? inventoryPosition;
   final int? inventoryQty;
-  final int? inventoryMin;
-  final int? inventoryMax;
 
   DrugInventory({
     required this.inventoryId,
     this.inventoryPosition,
     this.inventoryQty,
-    this.inventoryMin,
-    this.inventoryMax,
   });
 
   factory DrugInventory.fromJson(Map<String, dynamic> json) {
@@ -18,8 +14,6 @@ class DrugInventory {
       inventoryId: json['inventoryId'],
       inventoryPosition: json['inventoryPosition'] ?? 0,
       inventoryQty: json['inventoryQty'] ?? 0,
-      inventoryMin: json['inventoryMin'] ?? 0,
-      inventoryMax: json['inventoryMax'] ?? 0,
     );
   }
 
@@ -28,8 +22,6 @@ class DrugInventory {
       'inventoryId': inventoryId,
       'inventoryPosition': inventoryPosition,
       'inventoryQty': inventoryQty,
-      'inventoryMin': inventoryMin,
-      'inventoryMax': inventoryMax,
     };
   }
 }
@@ -40,6 +32,8 @@ class DrugGroup {
   final String drugName;
   final String drugImage;
   final int? drugPriority;
+  final int? groupMin;
+  final int? groupMax;
   final List<DrugInventory> inventoryList;
 
   DrugGroup({
@@ -48,6 +42,8 @@ class DrugGroup {
     required this.drugName,
     required this.drugImage,
     required this.drugPriority,
+    required this.groupMin,
+    required this.groupMax,
     required this.inventoryList,
   });
 
@@ -63,6 +59,8 @@ class DrugGroup {
       drugName: json['drugName'] ?? '',
       drugImage: json['drugImage'] ?? '',
       drugPriority: json['drugPriority'] ?? 0,
+      groupMin: json['groupMin'] ?? 0,
+      groupMax: json['groupMax'] ?? 0,
       inventoryList: inventoryList,
     );
   }
@@ -74,6 +72,8 @@ class DrugGroup {
       'drugName': drugName,
       'drugImage': drugImage,
       'drugPriority': drugPriority,
+      'groupMin': groupMin,
+      'groupMax': groupMax,
       'inventoryList': inventoryList.map((i) => i.toJson()).toList(),
     };
   }
