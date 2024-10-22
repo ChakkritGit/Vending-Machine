@@ -1,9 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vending/src/blocs/drug/drug_bloc.dart';
 import 'package:vending/src/constants/colors.dart';
+import 'package:vending/src/constants/style.dart';
+import 'package:vending/src/widgets/home_widget/medicine_bottom_sheet.dart';
 import 'package:vending/src/widgets/utils/no_data.dart';
 
 class MedicineList extends StatelessWidget {
@@ -57,72 +58,145 @@ class MedicineList extends StatelessWidget {
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 3.0, vertical: 3.0),
-                              child: SizedBox(
-                                width: 240.0,
-                                height: 285.0,
-                                child: Card(
-                                  color: Colors.white,
-                                  elevation: 3.0,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.file(
-                                        File(group.drugImage),
-                                        width: 180.0,
-                                        height: 130.0,
-                                        fit: BoxFit.contain,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Icon(
-                                          Icons.image,
-                                          size: 130.0,
-                                          color: ColorsTheme.grey,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          group.drugName,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0,
-                                          horizontal: 8.0,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          border: Border.all(
-                                            color: isOutOfStock
-                                                ? Colors.red
-                                                : isLowQty
-                                                    ? Colors.orange
-                                                    : Colors
-                                                        .grey, // กรอบเปลี่ยนสี
-                                            width: 2.0,
+                              child: GestureDetector(
+                                onTap: !isOutOfStock
+                                    ? () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          showDragHandle: true,
+                                          useSafeArea: true,
+                                          backgroundColor: Colors.white,
+                                          context: context,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(30.0)),
+                                          ),
+                                          builder: (context) {
+                                            return FractionallySizedBox(
+                                              widthFactor: 1.0,
+                                              child: MedicineBottomSheet(
+                                                  group: group),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    : null,
+                                child: SizedBox(
+                                  width: 180.0,
+                                  height: 220.0,
+                                  child: Card(
+                                    color: isOutOfStock
+                                        ? Colors.grey[300]
+                                        : Colors.white,
+                                    elevation: 3.0,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.file(
+                                                File(group.drugImage),
+                                                width: 100.0,
+                                                height: 80.0,
+                                                fit: BoxFit.contain,
+                                                color: isOutOfStock
+                                                    ? Colors.grey
+                                                    : null,
+                                                colorBlendMode:
+                                                    BlendMode.saturation,
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    const Icon(
+                                                  Icons.image,
+                                                  size: 130.0,
+                                                  color: ColorsTheme.grey,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  group.drugName,
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: isOutOfStock
+                                                        ? Colors.black38
+                                                        : Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                              CustomGap.smallHeightGap,
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4.0,
+                                                  horizontal: 8.0,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  border: Border.all(
+                                                    color: isOutOfStock
+                                                        ? Colors.black45
+                                                        : isLowQty
+                                                            ? Colors.orange
+                                                            : Colors
+                                                                .grey, // กรอบเปลี่ยนสี
+                                                    width: 2.0,
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  totalQty != 0
+                                                      ? 'คงเหลือ: $totalQty'
+                                                      : 'สินค้าหมด',
+                                                  style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: isOutOfStock
+                                                        ? Colors.black45
+                                                        : isLowQty
+                                                            ? Colors
+                                                                .orange // แสดงสีส้มถ้าต่ำกว่า minQty
+                                                            : Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        child: Text(
-                                          'คงเหลือ: $totalQty',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: isOutOfStock
-                                                ? Colors.red // แสดงสีแดงถ้าหมด
-                                                : isLowQty
-                                                    ? Colors
-                                                        .orange // แสดงสีส้มถ้าต่ำกว่า minQty
-                                                    : Colors.black,
+                                        if (group.drugPriority == 1)
+                                          Positioned(
+                                            right: 8.0,
+                                            top: 8.0,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 4.0,
+                                                horizontal: 8.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: ColorsTheme.error,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: const Text(
+                                                'สำคัญ',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -138,7 +212,6 @@ class MedicineList extends StatelessWidget {
                 ),
               );
             } else {
-              // ใช้ SizedBox.expand หรือ Container ที่มีขนาดเต็มจอแทน Expanded
               return const SizedBox.expand(
                 child: Center(
                   child: NoData(

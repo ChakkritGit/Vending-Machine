@@ -67,6 +67,9 @@ class CustomInputStyle {
   static const inputWidth = double.infinity;
   static const inputHeight = 70.0;
 
+  static const inputWidthPopup = 180.0;
+  static const inputHeightPopup = 65.0;
+
   static final inputBoxdecoration = BoxDecoration(
     // color: Colors.white,
     border: Border.all(width: 2, color: ColorsTheme.blackAlpha),
@@ -75,6 +78,11 @@ class CustomInputStyle {
 
   static final buttonBoxdecoration = BoxDecoration(
     color: ColorsTheme.primary,
+    borderRadius: CustomRadius.smallRadius,
+  );
+
+  static final buttonBoxdecorationCancel = BoxDecoration(
+    color: ColorsTheme.error,
     borderRadius: CustomRadius.smallRadius,
   );
 

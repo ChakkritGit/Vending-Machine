@@ -31,6 +31,7 @@ class DrugGroup {
   final String drugId;
   final String drugName;
   final String drugImage;
+  final String drugUnit;
   final int? drugPriority;
   final int? groupMin;
   final int? groupMax;
@@ -41,6 +42,7 @@ class DrugGroup {
     required this.drugId,
     required this.drugName,
     required this.drugImage,
+    required this.drugUnit,
     required this.drugPriority,
     required this.groupMin,
     required this.groupMax,
@@ -58,6 +60,7 @@ class DrugGroup {
       drugId: json['drugId'] ?? '',
       drugName: json['drugName'] ?? '',
       drugImage: json['drugImage'] ?? '',
+      drugUnit: json['drugUnit'] ?? '',
       drugPriority: json['drugPriority'] ?? 0,
       groupMin: json['groupMin'] ?? 0,
       groupMax: json['groupMax'] ?? 0,
@@ -71,6 +74,7 @@ class DrugGroup {
       'drugId': drugId,
       'drugName': drugName,
       'drugImage': drugImage,
+      'drugUnit': drugUnit,
       'drugPriority': drugPriority,
       'groupMin': groupMin,
       'groupMax': groupMax,

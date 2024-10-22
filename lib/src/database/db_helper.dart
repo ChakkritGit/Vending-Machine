@@ -198,6 +198,39 @@ class DatabaseHelper {
     }
   }
 
+  Future<String> verifyUser(
+      BuildContext context, Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    try {
+      final result = await db.query(
+        'users',
+        where: 'LOWER(userName) = ?',
+        whereArgs: [row['userName'].toString().toLowerCase()],
+      );
+
+      if (result.isNotEmpty) {
+        String inputPassword = row['userPassword'] as String;
+        var bytes = utf8.encode(inputPassword.toLowerCase());
+        var hashedInputPassword = sha256.convert(bytes).toString();
+
+        String storedPassword = result.first['userPassword'] as String;
+
+        if (hashedInputPassword == storedPassword) {
+          return 'verify';
+        } else {
+          return 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+        }
+      } else {
+        return 'ไม่พบชื่อผู้ใช้ในระบบ';
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
   // เพิ่ม
   Future<bool> createUser(
       BuildContext context, Map<String, dynamic> row) async {
@@ -748,6 +781,7 @@ class DatabaseHelper {
         d.drugName,
         d.drugImage,
         d.drugPriority,
+        d.drugUnit,
         gi.inventoryId,
         gi.min as groupMin,
         gi.max as groupMax,
@@ -765,6 +799,7 @@ class DatabaseHelper {
         d.drugName,
         d.drugImage,
         d.drugPriority,
+        d.drugUnit,
         gi.inventoryId,
         gi.min as groupMin,
         gi.max as groupMax,
@@ -797,6 +832,7 @@ class DatabaseHelper {
               'drugName': item['drugName'],
               'drugImage': item['drugImage'],
               'drugPriority': item['drugPriority'],
+              'drugUnit': item['drugUnit'],
               'groupMin': item['groupMin'],
               'groupMax': item['groupMax'],
               'inventoryList': [
