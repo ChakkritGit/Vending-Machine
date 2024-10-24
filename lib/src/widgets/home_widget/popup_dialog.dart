@@ -84,9 +84,19 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Center(
-        child: Text(
-          'ยาสำคัญ!',
-          style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Icon(
+              Icons.warning_rounded,
+              size: 52.0,
+              color: Colors.amber,
+            ),
+            CustomGap.smallHeightGap,
+            Text(
+              'ยาสำคัญ',
+              style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
       content: const Center(

@@ -57,12 +57,10 @@ class MedicineList extends StatelessWidget {
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6.0,
-                                  vertical: 8.0),
+                                  horizontal: 6.0, vertical: 8.0),
                               child: Material(
                                 elevation: 2.0,
-                                borderRadius: BorderRadius.circular(
-                                    10.0),
+                                borderRadius: BorderRadius.circular(10.0),
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: !isOutOfStock
@@ -95,17 +93,13 @@ class MedicineList extends StatelessWidget {
                                       color: isOutOfStock
                                           ? Colors.grey[300]
                                           : Colors.white,
-                                      borderRadius: BorderRadius.circular(
-                                          10.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(
-                                              0.1),
+                                          color: Colors.black.withOpacity(0.1),
                                           blurRadius: 6.0,
-                                          spreadRadius:
-                                              2.0,
-                                          offset: const Offset(
-                                              0, 2),
+                                          spreadRadius: 2.0,
+                                          offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
@@ -222,8 +216,7 @@ class MedicineList extends StatelessWidget {
                               ),
                             );
                           } else {
-                            return const SizedBox
-                                .shrink();
+                            return const SizedBox.shrink();
                           }
                         }),
                       );
