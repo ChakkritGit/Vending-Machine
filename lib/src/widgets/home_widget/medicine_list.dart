@@ -57,38 +57,60 @@ class MedicineList extends StatelessWidget {
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 3.0, vertical: 3.0),
-                              child: GestureDetector(
-                                onTap: !isOutOfStock
-                                    ? () {
-                                        showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          showDragHandle: true,
-                                          useSafeArea: true,
-                                          backgroundColor: Colors.white,
-                                          context: context,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(30.0)),
-                                          ),
-                                          builder: (context) {
-                                            return FractionallySizedBox(
-                                              widthFactor: 1.0,
-                                              child: MedicineBottomSheet(
-                                                  group: group),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    : null,
-                                child: SizedBox(
-                                  width: 180.0,
-                                  height: 220.0,
-                                  child: Card(
-                                    color: isOutOfStock
-                                        ? Colors.grey[300]
-                                        : Colors.white,
-                                    elevation: 3.0,
+                                  horizontal: 6.0,
+                                  vertical: 8.0),
+                              child: Material(
+                                elevation: 2.0,
+                                borderRadius: BorderRadius.circular(
+                                    10.0),
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: !isOutOfStock
+                                      ? () {
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            showDragHandle: true,
+                                            useSafeArea: true,
+                                            backgroundColor: Colors.white,
+                                            context: context,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top: Radius.circular(
+                                                          30.0)),
+                                            ),
+                                            builder: (context) {
+                                              return FractionallySizedBox(
+                                                widthFactor: 1.0,
+                                                child: MedicineBottomSheet(
+                                                    group: group),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      : null,
+                                  splashColor: ColorsTheme.blackAlpha,
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                      color: isOutOfStock
+                                          ? Colors.grey[300]
+                                          : Colors.white,
+                                      borderRadius: BorderRadius.circular(
+                                          10.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(
+                                              0.1),
+                                          blurRadius: 6.0,
+                                          spreadRadius:
+                                              2.0,
+                                          offset: const Offset(
+                                              0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    width: 180.0,
+                                    height: 220.0,
                                     child: Stack(
                                       children: [
                                         Container(
@@ -147,8 +169,7 @@ class MedicineList extends StatelessWidget {
                                                         ? Colors.black45
                                                         : isLowQty
                                                             ? Colors.orange
-                                                            : Colors
-                                                                .grey, // กรอบเปลี่ยนสี
+                                                            : Colors.grey,
                                                     width: 2.0,
                                                   ),
                                                 ),
@@ -162,8 +183,7 @@ class MedicineList extends StatelessWidget {
                                                     color: isOutOfStock
                                                         ? Colors.black45
                                                         : isLowQty
-                                                            ? Colors
-                                                                .orange // แสดงสีส้มถ้าต่ำกว่า minQty
+                                                            ? Colors.orange
                                                             : Colors.black,
                                                   ),
                                                 ),
@@ -203,7 +223,7 @@ class MedicineList extends StatelessWidget {
                             );
                           } else {
                             return const SizedBox
-                                .shrink(); // ถ้าไม่มีการ์ดให้แสดง ข้ามไป
+                                .shrink();
                           }
                         }),
                       );

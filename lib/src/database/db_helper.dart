@@ -209,6 +209,9 @@ class DatabaseHelper {
       );
 
       if (result.isNotEmpty) {
+        if (result[0]['userRole'] != 'Admin') return 'ผู้ใช้นี้ไม่มีสิทธิยืนยัน';
+        if (result[0]['userName'].toString().toLowerCase() == row['userName'].toString().toLowerCase()) return 'คุณไม่มีสิทธิยืนยันให้ตัวเอง';
+
         String inputPassword = row['userPassword'] as String;
         var bytes = utf8.encode(inputPassword.toLowerCase());
         var hashedInputPassword = sha256.convert(bytes).toString();
@@ -218,7 +221,7 @@ class DatabaseHelper {
         if (hashedInputPassword == storedPassword) {
           return 'verify';
         } else {
-          return 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+          return 'รหัสผ่านไม่ถูกต้อง';
         }
       } else {
         return 'ไม่พบชื่อผู้ใช้ในระบบ';

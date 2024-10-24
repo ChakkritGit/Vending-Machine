@@ -5,6 +5,7 @@ import 'package:vending/src/constants/colors.dart';
 import 'package:vending/src/constants/style.dart';
 import 'package:vending/src/database/db_helper.dart';
 import 'package:vending/src/models/drugs/drug_list_model.dart';
+import 'package:vending/src/widgets/md_widget/popup_dialog.dart';
 
 class DrugPriorityPopup extends StatefulWidget {
   final DrugGroup drug;
@@ -19,7 +20,6 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
   late TextEditingController userName;
   late TextEditingController userPassword;
   bool isHidden = false;
-  String error = '';
 
   @override
   void initState() {
@@ -47,19 +47,36 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
           {'userName': userName.text, 'userPassword': userPassword.text});
 
       if (result == 'verify') {
-        setState(() {
-          error = '';
-        });
-        Navigator.pop(context);
+        // Navigator.pop(context);
+        Navigator.popUntil(
+          context,
+          ModalRoute.withName('/home'),
+        );
       } else {
-        setState(() {
-          error = result;
-        });
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => PopupDialog(
+            isError: true,
+            icon: Icons.error_rounded,
+            title: 'ผิดพลาด',
+            content: result,
+            textButton: 'ลองอีกครั้ง',
+          ),
+        );
       }
     } else {
-      setState(() {
-        error = '*** กรุณาป้อนข้อมูลให้ครบ ***';
-      });
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => const PopupDialog(
+          isError: false,
+          icon: Icons.warning_rounded,
+          title: 'คำเตือน',
+          content: 'กรุณาป้อนข้อมูลให้ครบ',
+          textButton: 'ลองอีกครั้ง',
+        ),
+      );
     }
   }
 
@@ -75,7 +92,7 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
       content: const Center(
         heightFactor: 1.0,
         child: Text(
-          'ยาสำคัญจำเป็นต้องมีการยืนยันจากเจ้าหน้าที่อย่างต่ำหนึ่งคน',
+          'ยาสำคัญจำเป็นต้องมีการยืนยันจากเจ้าหน้าที่ ๆมีสิทธิอย่างน้อยหนึ่งคน',
           style: TextStyle(
             fontSize: 20.0,
           ),
@@ -127,18 +144,6 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
             ),
           ),
         ),
-        CustomGap.smallHeightGap,
-        error != ''
-            ? Center(
-                child: Text(
-                  error,
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    color: ColorsTheme.error,
-                  ),
-                ),
-              )
-            : Container(),
         CustomGap.mediumHeightGap,
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

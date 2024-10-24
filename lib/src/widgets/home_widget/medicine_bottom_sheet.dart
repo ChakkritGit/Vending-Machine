@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vending/src/constants/style.dart';
 import 'package:vending/src/models/drugs/drug_list_model.dart';
 import 'package:vending/src/widgets/home_widget/popup_dialog.dart';
+import 'package:vending/src/widgets/md_widget/popup_dialog.dart';
 
 class MedicineBottomSheet extends StatefulWidget {
   final DrugGroup group;
@@ -74,12 +75,41 @@ class _MedicineBottomSheetState extends State<MedicineBottomSheet> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                widget.group.drugName,
-                style: const TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.group.drugName,
+                    style: const TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  CustomGap.smallWidthGap_1,
+                  widget.group.drugPriority == 1
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 4.0,
+                            horizontal: 8.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(
+                              color: Colors.red,
+                              width: 2.0,
+                            ),
+                          ),
+                          child: const Text(
+                            'ยาสำคัญ',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
               ),
               Text(
                 widget.group.drugUnit,
@@ -140,6 +170,18 @@ class _MedicineBottomSheetState extends State<MedicineBottomSheet> {
               onPressed: () {
                 if (currentQty > 0) {
                   checkDrugPriority(currentQty, widget.group);
+                } else {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => const PopupDialog(
+                      isError: false,
+                      icon: Icons.warning_rounded,
+                      title: 'คำเตือน',
+                      content: 'กรุณาเลือกจำนวน',
+                      textButton: 'ตกลง',
+                    ),
+                  );
                 }
               },
               child: const Icon(
