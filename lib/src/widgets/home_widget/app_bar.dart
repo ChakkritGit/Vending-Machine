@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,9 +104,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        if (kDebugMode) {
-                          print('Image tapped!');
-                        }
+                        Navigator.pushNamed(
+                          context,
+                          custom_route.Routes.profile,
+                        );
                       },
                       child: Container(
                         width: 85.0,

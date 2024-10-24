@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vending/src/blocs/users/user_bloc.dart';
 import 'package:vending/src/constants/colors.dart';
 import 'package:vending/src/constants/style.dart';
 import 'package:vending/src/database/db_helper.dart';
@@ -41,10 +43,12 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
     });
   }
 
-  void verifyUser() async {
+  void verifyUser(String storeUserName) async {
     if (userName.text.isNotEmpty && userPassword.text.isNotEmpty) {
-      var result = await DatabaseHelper.instance.verifyUser(context,
-          {'userName': userName.text, 'userPassword': userPassword.text});
+      var result = await DatabaseHelper.instance.verifyUser(
+          context,
+          {'userName': userName.text, 'userPassword': userPassword.text},
+          storeUserName);
 
       if (result == 'verify') {
         // Navigator.pop(context);
@@ -175,21 +179,30 @@ class _DrugPriorityPopupState extends State<DrugPriorityPopup> {
               ),
             ),
             CustomGap.smallWidthGap_1,
-            Container(
-              width: CustomInputStyle.inputWidthPopup,
-              height: CustomInputStyle.inputHeightPopup,
-              decoration: CustomInputStyle.buttonBoxdecoration,
-              child: TextButton(
-                onPressed: verifyUser,
-                child: const Text(
-                  'ดำเนินการต่อ',
-                  style: TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state.userData.isNotEmpty) {
+                  final user = state.userData[0];
+                  return Container(
+                    width: CustomInputStyle.inputWidthPopup,
+                    height: CustomInputStyle.inputHeightPopup,
+                    decoration: CustomInputStyle.buttonBoxdecoration,
+                    child: TextButton(
+                      onPressed: () => verifyUser(user.userName),
+                      child: const Text(
+                        'ดำเนินการต่อ',
+                        style: TextStyle(
+                            fontSize: 24.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ],
         )
       ],

@@ -5,6 +5,7 @@ import 'package:vending/src/screens/add_machine.dart';
 import 'package:vending/src/screens/database_screen.dart';
 import 'package:vending/src/screens/manage_main_inventory_screen.dart';
 import 'package:vending/src/screens/manage_machine_screen.dart';
+import 'package:vending/src/screens/manage_profile_screen.dart';
 import 'package:vending/src/screens/manage_settings_screen.dart';
 import 'package:vending/src/screens/manage_stock_screen.dart';
 import 'package:vending/src/screens/screen_index.dart';
@@ -24,6 +25,7 @@ class Routes {
   static const addinventory = '/addinventory';
   static const addgroup = '/addgroup';
   static const settings = '/settings';
+  static const profile = '/profile';
 
   static const database = '/database';
 
@@ -45,5 +47,6 @@ class Routes {
     addgroup: (context) => const AddGroup(),
     settings: (context) => const ManageSettingsScreen(),
     database: (context) => const DatabaseScreen(),
+    profile: (context) => const ManageProfileScreen(),
   };
 }

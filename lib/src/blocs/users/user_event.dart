@@ -24,3 +24,12 @@ class UserData extends UserEvent {
   @override
   List<Object> get props => [userData];
 }
+
+class UserLoginLog extends UserEvent {
+  final List<UserLoginModel> userLoginLog;
+
+  const UserLoginLog({required this.userLoginLog});
+
+  @override
+  List<Object> get props => [userLoginLog];
+}

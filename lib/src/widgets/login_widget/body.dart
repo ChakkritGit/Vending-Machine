@@ -43,6 +43,12 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
         StoredLocal storage = StoredLocal.instance;
         await storage.saveUserData('userData', result);
 
+        await DatabaseHelper.instance.loginLog({
+          'userId': result[0]['id'],
+          'createdAt': DateTime.now().toIso8601String(),
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
+
         await Future.delayed(const Duration(seconds: 1));
         setState(() {
           isLoading = false;

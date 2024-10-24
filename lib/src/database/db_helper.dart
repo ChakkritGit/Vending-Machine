@@ -23,6 +23,7 @@ import 'package:vending/src/models/drugs/drug_model.dart';
 import 'package:vending/src/models/inventory/inventory.dart';
 import 'package:vending/src/models/machine/machine_model.dart';
 import 'package:vending/src/models/stocks/stocks.dart';
+import 'package:vending/src/models/users/user_login_model.dart';
 import 'package:vending/src/models/users/user_model.dart';
 import 'package:vending/src/widgets/utils/scaffold_message.dart';
 import 'package:uuid/uuid.dart';
@@ -151,6 +152,17 @@ class DatabaseHelper {
       FOREIGN KEY(inventoryId) REFERENCES inventory(id)
 );
 ''');
+
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS login (
+      id TEXT NOT NULL PRIMARY KEY,
+      userId TEXT NOT NULL,
+      comment TEXT,
+      createdAt REAL NOT NULL,
+      updatedAt REAL NOT NULL,
+      FOREIGN KEY(userId) REFERENCES users(id)
+);
+''');
   }
 
   // การยืนยัน
@@ -199,7 +211,7 @@ class DatabaseHelper {
   }
 
   Future<String> verifyUser(
-      BuildContext context, Map<String, dynamic> row) async {
+      BuildContext context, Map<String, dynamic> row, String storeUserName) async {
     Database db = await instance.database;
     try {
       final result = await db.query(
@@ -209,8 +221,13 @@ class DatabaseHelper {
       );
 
       if (result.isNotEmpty) {
-        if (result[0]['userRole'] != 'Admin') return 'ผู้ใช้นี้ไม่มีสิทธิยืนยัน';
-        if (result[0]['userName'].toString().toLowerCase() == row['userName'].toString().toLowerCase()) return 'คุณไม่มีสิทธิยืนยันให้ตัวเอง';
+        if (result[0]['userRole'] != 'Admin') {
+          return 'ผู้ใช้นี้ไม่มีสิทธิยืนยัน';
+        }
+        if (result[0]['userName'].toString().toLowerCase() ==
+            storeUserName.toString().toLowerCase()) {
+          return 'คุณไม่มีสิทธิยืนยันให้ตัวเอง';
+        }
 
         String inputPassword = row['userPassword'] as String;
         var bytes = utf8.encode(inputPassword.toLowerCase());
@@ -1247,6 +1264,53 @@ ORDER BY
         print('permission denided');
       }
       return 4;
+    }
+  }
+
+  // บันทึกระบบ
+  Future<bool> loginLog(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    try {
+      row['id'] = 'LID-${const Uuid().v4()}';
+      await db.insert('login', row);
+      return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
+  Future<bool> getLoginLog(BuildContext context, String id) async {
+    Database db = await instance.database;
+    try {
+      final result = await db.rawQuery('''
+      SELECT
+        login.id,
+        login.userId,
+        users.displayName,
+        login.createdAt
+      FROM login
+      JOIN users ON login.userId = users.id
+      WHERE login.userId = ?
+      ORDER BY login.createdAt DESC
+    ''', [id]);
+
+      if (result.isNotEmpty) {
+        List<UserLoginModel> userLoginList =
+            result.map((map) => UserLoginModel.fromMap(map)).toList();
+        context.read<UserBloc>().add(UserLoginLog(userLoginLog: userLoginList));
+      } else {
+        context.read<UserBloc>().add(const UserLoginLog(userLoginLog: []));
+      }
+
+      return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
     }
   }
 }
