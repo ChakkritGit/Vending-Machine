@@ -104,7 +104,7 @@ class _MedicineBottomSheetState extends State<MedicineBottomSheet> {
         }
 
         if (qtyToDeduct > 0) {
-          dispense.connectPort();
+          // dispense.connectPort();
           await Future.delayed(const Duration(milliseconds: 300));
           var success =
               await dispense.sendToMachine(qtyToDeduct, inventoryPosition, qty);

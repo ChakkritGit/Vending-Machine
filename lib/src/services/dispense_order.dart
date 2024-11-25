@@ -5,8 +5,8 @@ import 'package:vending_standalone/src/services/serialport.dart';
 
 class DispenseOrder extends ChangeNotifier {
   late SharedPreferences prefs;
-  late StreamSubscription<List<int>>? streamSubscriptionS1;
-  late StreamSubscription<List<int>>? streamSubscriptionS2;
+  StreamSubscription<List<int>>? streamSubscriptionS1;
+  StreamSubscription<List<int>>? streamSubscriptionS2;
 
   List<int> writedata = [];
 
@@ -63,6 +63,7 @@ class DispenseOrder extends ChangeNotifier {
                 vending.ttyS1
                     .write(Uint8List.fromList([0xfa, 0xfb, 0x42, 0x00, 0x43]));
               } else {
+                await Future.delayed(const Duration(milliseconds: 500));
                 vending.ttyS1.write(Uint8List.fromList(writedata));
                 qty = qty - 1;
               }
@@ -71,19 +72,17 @@ class DispenseOrder extends ChangeNotifier {
               if (progress == 'dispensing') {
                 if (qty <= 0) {
                   if (countRound < summaryQty) {
-                    nextRound = true;
-                    streamSubscriptionS1?.pause();
-                    streamSubscriptionS2?.pause();
-                    streamSubscriptionS1?.cancel();
-                    streamSubscriptionS2?.cancel();
-                    vending.disconnectPort();
-                    await Future.delayed(const Duration(milliseconds: 500));
-                    completer.complete(true);
+                    if (!completer.isCompleted) {
+                      nextRound = true;
+                      streamSubscriptionS1?.pause();
+                      streamSubscriptionS1?.cancel();
+                      await Future.delayed(const Duration(milliseconds: 500));
+                      completer.complete(true);
+                    }
                   } else {
                     backToHome();
                   }
                 } else {
-                  await Future.delayed(const Duration(milliseconds: 500));
                   writeSerialttyS1(position);
                 }
               }
@@ -153,19 +152,21 @@ class DispenseOrder extends ChangeNotifier {
                 case '26,31,d,a,32,d,a,36,d,a,31,d,a,31,30,d,a':
                   // ประตูปิดแล้ว
                   // สั่งปลดล็อกกลอน
-                  vending.writeSerialttyS2('# 1 1 3 0 5');
                   progress = 'rackUnlocked';
+                  vending.writeSerialttyS2('# 1 1 3 0 5');
                   break;
                 case '26,31,d,a,32,d,a,33,d,a,30,d,a,36,d,a':
                   // ปลอดล็อกกลอนแล้ว
                   // กลับคืนค่าเริ่มต้น
-                  isDispense = false;
-                  nextRound = false;
-                  countRound = 0;
-                  qty = 0;
-                  floor = 20;
-                  progress = 'ready';
-                  completer.complete(true);
+                  if (progress == "rackUnlocked") {
+                    isDispense = false;
+                    nextRound = false;
+                    countRound = 0;
+                    qty = 0;
+                    floor = 20;
+                    progress = 'ready';
+                    completer.complete(true);
+                  }
                   break;
                 default:
               }
@@ -228,15 +229,5 @@ class DispenseOrder extends ChangeNotifier {
     if (!vending.ttyS1.isOpen && !vending.ttyS2.isOpen) {
       vending.connectPort();
     }
-  }
-
-  @override
-  void dispose() async {
-    streamSubscriptionS1?.pause();
-    streamSubscriptionS2?.pause();
-    streamSubscriptionS1?.cancel();
-    streamSubscriptionS2?.cancel();
-    await vending.disconnectPort();
-    super.dispose();
   }
 }
